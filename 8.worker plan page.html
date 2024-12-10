@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Planner</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to right, #4facfe, #00f2fe); /* Cool gradient background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure the content stays centered even with added padding */
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px; /* Increased size of the container */
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4facfe;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            background-color: #f9f9f9;
+        }
+
+        input:focus, button:focus {
+            outline: none;
+            border-color: #4facfe; /* Highlight input fields and buttons on focus */
+        }
+
+        button {
+            background-color: #4facfe;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #00f2fe; /* Lighter hover color */
+        }
+
+        /* Category Inputs */
+        .category-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .category-container input {
+            width: 45%;
+            margin-right: 10px;
+        }
+
+        .category-container button {
+            width: 30%;
+            background-color: #FF6347;
+            font-size: 1em;
+        }
+
+        .category-container button:hover {
+            background-color: #FF4500; /* Change to a red shade when hovering */
+        }
+
+        /* Generate Chart Button */
+        .generate-chart-btn {
+            background-color: #32CD32;
+        }
+
+        .generate-chart-btn:hover {
+            background-color: #228B22;
+        }
+
+        /* Add Category Button */
+        .add-category-btn {
+            background-color: #FFD700;
+            width: 100%;
+        }
+
+        .add-category-btn:hover {
+            background-color: #FFA500;
+        }
+
+        canvas {
+            display: block;
+            margin: 20px auto;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Budget Planner</h1>
+
+    <label for="allocatedLastWeek">Amount Allocated for Last Month:</label>
+    <input type="number" id="allocatedLastWeek" placeholder="Enter allocated amount">
+
+    <div id="categoryInputs">
+        <div class="category-container">
+            <label>Category</label>
+            <input type="text" class="category-name" placeholder="Category name">
+            <input type="number" class="category-spent" placeholder="Spending amount">
+            <button onclick="removeCategory(this)">Remove</button>
+        </div>
+    </div>
+
+    <button class="add-category-btn" onclick="addCategory()">Add More Categories</button>
+    <button class="generate-chart-btn" onclick="generateChart()">Generate Chart</button>
+
+    <!-- Canvas for Pie Chart -->
+    <canvas id="spendingChart" width="400" height="400"></canvas>
+
+    <button onclick="generatePlan()">Generate Plan</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Function to add more categories
+    function addCategory() {
+        const categoryContainer = document.createElement('div');
+        categoryContainer.classList.add('category-container');
+        categoryContainer.innerHTML = `
+            <input type="text" class="category-name" placeholder="Category name">
+            <input type="number" class="category-spent" placeholder="Spending amount">
+            <button onclick="removeCategory(this)">Remove</button>
+        `;
+        document.getElementById('categoryInputs').appendChild(categoryContainer);
+    }
+
+    // Function to remove a category
+    function removeCategory(button) {
+        button.parentElement.remove();
+    }
+
+    // Function to generate pie chart
+    function generateChart() {
+        const allocatedLastWeek = parseFloat(document.getElementById('allocatedLastWeek').value);
+        const categories = document.querySelectorAll('.category-name');
+        const spentAmounts = document.querySelectorAll('.category-spent');
+
+        const categoryNames = [];
+        const spent = [];
+        let totalSpent = 0;
+
+        // Get category names and spending amounts
+        categories.forEach((category, index) => {
+            if (category.value && spentAmounts[index].value) {
+                categoryNames.push(category.value);
+                const spentAmount = parseFloat(spentAmounts[index].value);
+                spent.push(spentAmount);
+                totalSpent += spentAmount;
+            }
+        });
+
+        if (spent.length === 0) {
+            alert("Please enter valid spending amounts.");
+            return;
+        }
+
+        const amountNotSpent = allocatedLastWeek - totalSpent;
+        categoryNames.push('Amount Not Spent');
+        spent.push(amountNotSpent);
+
+        // Define colors for the pie chart slices
+        const chartColors = ['#FF7E5F', '#FEB47B', '#66B3FF', '#99FF99', '#FF4D4D', '#B0E0E6'];
+
+        // Create the pie chart
+        const ctx = document.getElementById('spendingChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: categoryNames,
+                datasets: [{
+                    label: 'Actual Spending',
+                    data: spent,
+                    backgroundColor: chartColors.slice(0, spent.length), // Use colors for the categories
+                    borderColor: ['#fff', '#fff', '#fff', '#fff', '#fff', '#fff'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.raw.toFixed(2); // Format tooltip values
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Function to generate plan
+    function generatePlan() {
+        const allocatedLastWeek = parseFloat(document.getElementById('allocatedLastWeek').value);
+        const categories = document.querySelectorAll('.category-name');
+        const spentAmounts = document.querySelectorAll('.category-spent');
+
+        const categoryNames = [];
+        const spent = [];
+        let totalSpent = 0;
+
+        categories.forEach((category, index) => {
+            if (category.value && spentAmounts[index].value) {
+                categoryNames.push(category.value);
+                const spentAmount = parseFloat(spentAmounts[index].value);
+                spent.push(spentAmount);
+                totalSpent += spentAmount;
+            }
+        });
+
+        if (spent.length === 0) {
+            alert("Please enter valid spending amounts.");
+            return;
+        }
+
+        const amountNotSpent = allocatedLastWeek - totalSpent;
+        categoryNames.push('Amount Not Spent');
+        spent.push(amountNotSpent);
+
+        localStorage.setItem('categoryNames', JSON.stringify(categoryNames));
+        localStorage.setItem('spent', JSON.stringify(spent));
+        localStorage.setItem('allocatedLastWeek', allocatedLastWeek);
+
+        window.location.href = '10.workers page.html'; // Redirect to next page
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker's Plan</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to right, #00c6ff, #0072ff); /* Cool gradient background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 900px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #4facfe;
+            margin-bottom: 30px;
+        }
+
+        .plan {
+            text-align: left;
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .plan p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .plan ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        .plan li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        .button {
+            background-color: #32CD32;
+            padding: 12px 24px;
+            color: white;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 30px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #228B22;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .plan p {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Worker's Plan</h1>
+
+    <div class="plan" id="plan">
+        <!-- Plan will be displayed here -->
+    </div>
+
+    <button class="button" onclick="finalizePlan()">Finalize Plan</button>
+</div>
+
+<script>
+    window.onload = function() {
+        // Fetch the data from localStorage
+        const categoryNames = JSON.parse(localStorage.getItem('categoryNames'));
+        const spent = JSON.parse(localStorage.getItem('spent'));
+        const allocatedLastMonth = parseFloat(localStorage.getItem('allocatedLastWeek'));
+
+        // Calculate savings, investments, and the remaining amount
+        const savings = 0.03 * allocatedLastMonth;
+        const investments = 0.05 * allocatedLastMonth;
+        const remainingAmount = allocatedLastMonth - savings - investments;
+
+        let totalSpent = 0;
+        spent.forEach(amount => totalSpent += amount);
+
+        const distribution = spent.map(amount => (amount / totalSpent) * remainingAmount);
+
+        let planHTML = ` 
+            <p><strong>Savings:</strong> ₹${savings.toFixed(2)}</p>
+            <p><strong>Investments:</strong> ₹${investments.toFixed(2)}</p>
+            <p><strong>Remaining Amount to be Distributed:</strong> ₹${remainingAmount.toFixed(2)}</p>
+            <p><strong>Category Distribution:</strong></p>
+            <ul>
+        `;
+
+        categoryNames.forEach((name, index) => {
+            planHTML += `
+                <li><strong>${name}:</strong> ₹${distribution[index].toFixed(2)}</li>
+            `;
+        });
+
+        planHTML += `</ul>`;
+
+        document.getElementById('plan').innerHTML = planHTML;
+    }
+
+    // Function to finalize the plan and redirect to "thank you" page
+    function finalizePlan() {
+        window.location.href = '11.thank you.html'; // Redirect to the thank you page
+    }
+</script>
+
+</body>
+</html>

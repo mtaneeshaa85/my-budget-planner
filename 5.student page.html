@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Information</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align from the top */
+            min-height: 100vh; /* Allow the height to expand */
+            color: white;
+            padding-top: 80px; /* Added extra space at the top for visibility */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        /* Title for the page at the top */
+        .main-title {
+            font-weight: bold;
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #FFD700;
+            text-align: center; /* Centered */
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-decoration: underline;
+            color: #f1f1f1;
+            text-align: center; /* Centered titles */
+        }
+
+        .section-content {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 5px;
+            text-align: left;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .section-content {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Main Heading for the page -->
+    <div class="main-title">Student Page</div>
+
+    <!-- Purpose Section Heading -->
+    <div class="section-title">Purpose</div>
+    <div class="section-content">
+        This budget planning project is particularly useful for students as it helps them track their spending patterns and make more informed financial decisions. By analyzing their previous week's expenditures, the tool provides a personalized budget that aligns with their needs, helping them save money and avoid overspending. Additionally, it promotes financial responsibility, an essential skill for students managing limited resources while balancing academic and personal expenses.
+    </div>
+    
+    <!-- Weekly Plan Approach Section -->
+    <div class="section-title">Weekly Plan Approach</div>
+    <div class="section-content">
+        The given plan will be on a weekly basis so that students can easily keep a progress of their financial habits.
+    </div>
+
+    <!-- Student Form -->
+    <form>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" placeholder="Enter your age" required>
+
+        <label for="occupation">Occupation (school/college):</label>
+        <input type="text" id="occupation" name="occupation" placeholder="Enter your occupation" required>
+
+        <label for="institution">Name of Institution (Optional):</label>
+        <input type="text" id="institution" name="institution" placeholder="Enter institution name">
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+
+        <!-- Button to enter plan page -->
+        <a href="budget-planner.html" class="btn">Enter to Plan Page</a>
+    </form>
+</div>
+
+</body>
+</html>

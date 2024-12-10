@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Week Plan</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to right, #00c6ff, #0072ff); /* Cool gradient background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Centering the content vertically */
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 900px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #4facfe;
+            margin-bottom: 30px;
+        }
+
+        .plan {
+            text-align: left;
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .plan p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .plan ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+
+        .plan li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        /* Button Styling */
+        a.button {
+            display: inline-block;
+            background-color: #f44336;
+            color: white;
+            cursor: pointer;
+            padding: 12px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a.button:hover {
+            background-color: #e53935;
+            transform: scale(1.05); /* Slight scale effect */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .plan p {
+                font-size: 1.1em;
+            }
+
+            a.button {
+                padding: 10px 25px;
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Next Week Plan</h1>
+
+    <div class="plan" id="plan">
+        <!-- Plan will be displayed here -->
+    </div>
+
+    <a href="11.thank you.html" class="button">Finalize Plan</a>
+</div>
+
+<script>
+    window.onload = function() {
+        const categoryNames = JSON.parse(localStorage.getItem('categoryNames'));
+        const spent = JSON.parse(localStorage.getItem('spent'));
+        const allocatedLastWeek = parseFloat(localStorage.getItem('allocatedLastWeek'));
+
+        const savings = 0.03 * allocatedLastWeek;
+        const charity = 0.05 * allocatedLastWeek;
+        const remainingAmount = allocatedLastWeek - savings - charity;
+
+        let totalSpent = 0;
+        spent.forEach(amount => totalSpent += amount);
+
+        const distribution = spent.map(amount => (amount / totalSpent) * remainingAmount);
+
+        let planHTML = ` 
+            <p><strong>Savings:</strong> ₹${savings.toFixed(2)}</p>
+            <p><strong>Charity:</strong> ₹${charity.toFixed(2)}</p>
+            <p><strong>Remaining Amount to be distributed:</strong> ₹${remainingAmount.toFixed(2)}</p>
+            <p><strong>Category Distribution:</strong></p>
+            <ul>
+        `;
+
+        categoryNames.forEach((name, index) => {
+            planHTML += `
+                <li><strong>${name}:</strong> ₹${distribution[index].toFixed(2)}</li>
+            `;
+        });
+
+        planHTML += `</ul>`;
+
+        document.getElementById('plan').innerHTML = planHTML;
+    }
+</script>
+
+</body>
+</html>
